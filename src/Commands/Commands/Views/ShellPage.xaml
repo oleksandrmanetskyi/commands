@@ -1,0 +1,78 @@
+﻿<Page
+    x:Class="Commands.Views.ShellPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:Commands.Helpers"
+    xmlns:models="using:Commands.Core.Models" 
+    xmlns:behaviors="using:Commands.Behaviors" 
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    Loaded="OnLoaded">
+
+    <Grid>
+        <Grid 
+            x:Name="AppTitleBar"
+            Canvas.ZIndex="1"
+            Height="{Binding ElementName=NavigationViewControl, Path=CompactPaneLength}"
+            VerticalAlignment="Top">
+            
+            <Image 
+                Source="/Assets/WindowIcon.ico"
+                HorizontalAlignment="Left"
+                Width="16"
+                Height="16" />
+            <TextBlock 
+                x:Name="AppTitleBarText"
+                VerticalAlignment="Center"
+                TextWrapping="NoWrap"
+                Margin="{StaticResource MediumLeftMargin}" />
+            
+        </Grid>
+        
+        <NavigationView
+            x:Name="NavigationViewControl"
+            Canvas.ZIndex="0"
+            IsBackButtonVisible="Visible"
+            IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
+            SelectedItem="{x:Bind ViewModel.Selected, Mode=OneWay}"
+            IsSettingsVisible="True"
+            ExpandedModeThresholdWidth="1280"
+            DisplayModeChanged="NavigationViewControl_DisplayModeChanged"
+            Header="{x:Bind ((ContentControl)ViewModel.Selected).Content, Mode=OneWay}">
+            
+            <NavigationView.MenuItems>
+                <NavigationViewItem x:Uid="Shell_Home" helpers:NavigationHelper.NavigateTo="Commands.ViewModels.HomeViewModel">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xe80f;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <NavigationViewItemHeader x:Uid="Shell_Workspaces" />
+                <!-- Will be fiiled in by code-behind -->
+            </NavigationView.MenuItems>
+
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox QueryIcon="Find" AutomationProperties.Name="Search" />
+            </NavigationView.AutoSuggestBox>
+
+            <i:Interaction.Behaviors>
+                <behaviors:NavigationViewHeaderBehavior
+                    DefaultHeader="{x:Bind ((ContentControl)ViewModel.Selected).Content, Mode=OneWay}">
+                    <behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock
+                                    Text="{Binding}"
+                                    Style="{ThemeResource TitleTextBlockStyle}" />
+                            </Grid>
+                        </DataTemplate>
+                    </behaviors:NavigationViewHeaderBehavior.DefaultHeaderTemplate>
+                </behaviors:NavigationViewHeaderBehavior>
+            </i:Interaction.Behaviors>
+            
+            <Grid Margin="{StaticResource NavigationViewPageContentMargin}">
+                <Frame x:Name="NavigationFrame" />
+            </Grid>
+
+        </NavigationView>
+    </Grid>
+</Page>

@@ -1,0 +1,178 @@
+﻿<Page
+    x:Class="Commands.Views.CommandsDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:Commands.ViewModels" 
+    xmlns:models="using:Commands.Core.Models"
+    xmlns:actionPlugins="using:Commands.Core.ActionPlugins"
+    xmlns:helpers="using:Commands.Helpers" 
+    xmlns:behaviors="using:Commands.Behaviors" 
+    d:DataContext="{d:DesignInstance Type=viewmodels:CommandDetailViewModel}"
+    mc:Ignorable="d">
+
+    <Grid RowDefinitions="*, Auto">
+        <Grid Grid.Row="0">
+            <ScrollViewer>
+                <StackPanel HorizontalAlignment="Stretch">
+                    <TextBox
+                        Header="Name:"
+                        Text="{x:Bind ViewModel.Command.Name, Mode=TwoWay}"
+                        HorizontalAlignment="Left"
+                        Width="300" />
+                    <TextBlock Margin="{ThemeResource MediumTopMargin}" Text="Actions:" />
+                    <ItemsRepeater 
+                        ItemsSource="{x:Bind ViewModel.Command.Actions, Mode=OneWay}" 
+                        HorizontalAlignment="Left">
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType='models:Action'>
+                                <StackPanel 
+                                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    Padding="{ThemeResource ListBoxItemPadding}"
+                                    Margin="{ThemeResource SmallTopMargin}"
+                                    CanDrag="True">
+
+                                    <Grid>
+                                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                                            <ImageIcon 
+                                                Width="16"
+                                                Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(PluginName)}" />
+                                            <TextBlock Text="{x:Bind PluginName}" Margin="{StaticResource XSmallLeftMargin}" />
+                                        </StackPanel>
+
+                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                            <Button Margin="{StaticResource XSmallLeftMargin}">
+                                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8BB;" FontSize="14"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBox 
+                                        Margin="{StaticResource SmallTopMargin}"
+                                        ScrollViewer.HorizontalScrollMode="Auto"
+                                        Text="{x:Bind Parameters['Script'], Mode=TwoWay}"/>
+
+                                    <ToggleSwitch 
+                                        Margin="{StaticResource SmallTopMargin}"
+                                        OnContent="Keep window open" 
+                                        OffContent="Close window after finishing" 
+                                        IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}" />
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                    <DropDownButton Content="Add new action" Margin="{StaticResource SmallTopMargin}">
+                        <DropDownButton.Flyout>
+                            <Flyout Placement="Bottom">
+                                <ListView
+                                    x:Name="AvaliableActionsListView"
+                                    ItemsSource="{x:Bind ViewModel.GetActionPlugins()}" 
+                                    Height="130"
+                                    ItemClick="AvaliableActionsListView_ItemClick"
+                                    SelectionMode="None"
+                                    IsItemClickEnabled="True">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="actionPlugins:IActionPlugin">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ImageIcon 
+                                                    Width="16"
+                                                    Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(Name)}" />
+                                                <TextBlock 
+                                                    Text="{x:Bind Name}" Margin="{StaticResource XSmallLeftMargin}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </Flyout>
+                        </DropDownButton.Flyout>
+                    </DropDownButton>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
+        <!-- <StackPanel Grid.Row="1" Padding="{StaticResource FooterPadding}" Orientation="Horizontal">
+            <Button Content="Move to another workspace" />
+            <Button Margin="{StaticResource SmallLeftMargin}" Background="Firebrick" Foreground="White">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;" FontSize="14"/>
+                    <TextBlock Text="Delete" Margin="{StaticResource XSmallLeftMargin}" />
+                </StackPanel>
+
+                <Button.Flyout>
+                    <Flyout>
+                        <StackPanel>
+                            <TextBlock 
+                                Style="{ThemeResource BaseTextBlockStyle}" 
+                                Text="The command will be removed. Do you want to continue?" />
+                            <Button Content="Yes, delete" Margin="{StaticResource SmallTopMargin}"/>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+
+            </Button>
+        </StackPanel> -->
+
+    </Grid>
+
+    <behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+        <DataTemplate x:DataType="viewmodels:CommandDetailViewModel">
+            <Grid>
+                <TextBlock
+                    Text="{x:Bind Command.Name}"
+                    HorizontalAlignment="Left"
+                    Style="{ThemeResource TitleTextBlockStyle}"
+                    VerticalAlignment="Center" />
+
+                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button 
+                        Command="{x:Bind RunButtonClickCommand}"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind RunButtonEnabled, Mode=OneWay}">
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xF5B0;" FontSize="14" Foreground="Green"/>
+                            <TextBlock x:Uid="Command_Run" Margin="{StaticResource XSmallLeftMargin}" />
+                        </StackPanel>
+                    </Button>
+
+                    <Button Margin="{StaticResource SmallLeftMargin}">
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE712;"/>
+                        <Button.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem 
+                                    Text="Starred" 
+                                    Visibility="{x:Bind CommandStarredVisibility(x:True), Mode=OneWay}" 
+                                    Command="{x:Bind StarCommandButtonClickCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE735;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem 
+                                    Text="Star" 
+                                    Visibility="{x:Bind CommandStarredVisibility(x:False), Mode=OneWay}"
+                                    Command="{x:Bind StarCommandButtonClickCommand}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE734;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Move">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8DE;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Text="Delete">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE74D;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
+                
+            </Grid>
+        </DataTemplate>
+    </behaviors:NavigationViewHeaderBehavior.HeaderTemplate>
+</Page>

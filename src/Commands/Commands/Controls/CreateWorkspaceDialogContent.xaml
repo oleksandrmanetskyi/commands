@@ -1,0 +1,23 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<Page
+    x:Class="Commands.Controls.CreateWorkspaceDialogContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
+            <TextBox Text="{x:Bind WorkspaceName, Mode=TwoWay}" Header="Name:" Width="300" />
+            <Button Margin="{StaticResource SmallTopMargin}" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" FontSize="14" />
+                    <TextBlock Text="Import workspace configuration" Margin="{StaticResource SmallLeftMargin}" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>
