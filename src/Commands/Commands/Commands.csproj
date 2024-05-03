@@ -24,6 +24,7 @@
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\CommandLineActionLayoutContent.xaml" />
     <None Remove="Controls\CreateWorkspaceDialogContent.xaml" />
   </ItemGroup>
 
@@ -48,6 +49,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\CommandLineActionLayoutContent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\CreateWorkspaceDialogContent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -55,10 +59,6 @@
 
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
   
   <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">

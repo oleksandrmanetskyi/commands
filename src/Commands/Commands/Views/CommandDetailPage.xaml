@@ -32,7 +32,7 @@
                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                     Padding="{ThemeResource ListBoxItemPadding}"
                                     Margin="{ThemeResource SmallTopMargin}"
-                                    CanDrag="True">
+                                    CanDrag="False">
 
                                     <Grid>
                                         <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
@@ -49,16 +49,7 @@
                                         </StackPanel>
                                     </Grid>
 
-                                    <TextBox 
-                                        Margin="{StaticResource SmallTopMargin}"
-                                        ScrollViewer.HorizontalScrollMode="Auto"
-                                        Text="{x:Bind Parameters['Script'], Mode=TwoWay}"/>
-
-                                    <ToggleSwitch 
-                                        Margin="{StaticResource SmallTopMargin}"
-                                        OnContent="Keep window open" 
-                                        OffContent="Close window after finishing" 
-                                        IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}" />
+                                    {{helpers:ActionLayoutResolverHelper.GetLayoutTemplate(PluginName)}}
 
                                 </StackPanel>
                             </DataTemplate>

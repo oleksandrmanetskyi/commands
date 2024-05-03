@@ -80,15 +80,21 @@ public class WorkspacesDataService
 
     private async Task Load()
     {
-        var workspaces = localStorageService.GetSavedDataNames(workspacesFolder);
-
-        await foreach (var workspace in workspaces)
+        try
         {
-            var workspaceData = await localStorageService.ReadDataAsync<Workspace>(workspace, workspacesFolder);
-            if (workspaceData != null)
+            var workspaces = localStorageService.GetSavedDataNames(workspacesFolder);
+
+            await foreach (var workspace in workspaces)
             {
-                allWorkspaces.Add(workspaceData);
+                var workspaceData = await localStorageService.ReadDataAsync<Workspace>(workspace, workspacesFolder);
+                if (workspaceData != null)
+                {
+                    allWorkspaces.Add(workspaceData);
+                }
             }
+        }
+        catch {
+            
         }
     }
 

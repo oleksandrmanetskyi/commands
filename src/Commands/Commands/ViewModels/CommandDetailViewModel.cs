@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using Commands.ActionPlugins;
 using Commands.Contracts.ViewModels;
+using Commands.Core;
 using Commands.Core.ActionPlugins;
 using Commands.Core.Models;
 using Commands.Core.Services;
@@ -17,15 +18,19 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     public bool RunButtonEnabled { get; set; }
 
     private readonly WorkspacesDataService workspacesDataService;
-    private readonly ActionsService actionsService;
+    private readonly ActionsRegistry actionsService;
+    private readonly CommandExecutor commandExecutor;
 
     [ObservableProperty]
     private Command? command;
 
-    public CommandDetailViewModel(WorkspacesDataService workspacesDataService, ActionsService actionsService)
+    public CommandDetailViewModel(
+        WorkspacesDataService workspacesDataService, ActionsRegistry actionsService, CommandExecutor commandExecutor)
     {
         this.workspacesDataService = workspacesDataService;
         this.actionsService = actionsService;
+        this.commandExecutor = commandExecutor;
+
         RunButtonEnabled = true;
 
         RunButtonClickCommand = new AsyncRelayCommand(ExecuteAsync);
@@ -47,6 +52,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     public void CreateNewAction(string actionName)
     {
+        var layout = actionName == new TextInput().Name ? Layouts.TextInput : Layouts.CommandLine;
         Command?.Actions.Add(new Core.Models.Action()
         {
             PluginName = actionName,
@@ -54,7 +60,8 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
             {
                 { "Script", "" },
                 { "KeepShowWindow", "false" }
-            }
+            },
+            Layout = layout,
         });
     }
 
@@ -62,6 +69,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     {
         return actionsService.GetActionPlugins();
     }
+
     public Visibility CommandStarredVisibility(bool starredOption)
     {
         if ((starredOption && Command!.Starred) || (!starredOption && !Command!.Starred))
@@ -82,19 +90,16 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         }
 
         RunButtonEnabled = false;
-        foreach (var action in command.Actions)
-        {
-            var handler = actionsService.GetActionPluginByName(action.PluginName);
-            if (handler != null)
-            {
-                await handler.ExecuteAsync(action);
-            }
-        }
+        await commandExecutor.ExecuteAsync(command);
         RunButtonEnabled = true;
     }
 
     private void StarCommand()
     {
-        Command!.Starred = !Command.Starred;
+        if (Command != null)
+        {
+            Command.Starred = !Command.Starred;
+        }
+        
     }
 }

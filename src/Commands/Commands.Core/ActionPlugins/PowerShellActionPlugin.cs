@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using Commands.Core.Models;
 
 namespace Commands.Core.ActionPlugins;
 
@@ -16,7 +17,7 @@ public class PowerShellActionPlugin : IActionPlugin
         return true;
     }
 
-    public async Task ExecuteAsync(Models.Action action)
+    public async Task ExecuteAsync(Models.Action action, CommandExecutorContext _)
     {
         var keepShowWindow = action.Parameters["KeepShowWindow"].ToLower() == "true";
         var arguments = new StringBuilder();
