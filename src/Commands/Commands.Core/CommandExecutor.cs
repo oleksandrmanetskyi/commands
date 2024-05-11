@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Commands.Core.Models;
+﻿using Commands.Core.Models;
 using Commands.Core.Services;
 
 namespace Commands.Core;
@@ -18,12 +13,14 @@ public class CommandExecutor
     }
     public async Task ExecuteAsync(Command command)
     {
+        var context = new CommandExecutorContext();
+
         foreach (var action in command.Actions)
         {
             var handler = actionsService.GetActionPluginByName(action.PluginName);
             if (handler != null)
             {
-                await handler.ExecuteAsync(action);
+                await handler.ExecuteAsync(action, context);
             }
         }
     }

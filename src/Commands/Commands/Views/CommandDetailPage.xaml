@@ -8,9 +8,44 @@
     xmlns:models="using:Commands.Core.Models"
     xmlns:actionPlugins="using:Commands.Core.ActionPlugins"
     xmlns:helpers="using:Commands.Helpers" 
-    xmlns:behaviors="using:Commands.Behaviors" 
+    xmlns:behaviors="using:Commands.Behaviors" xmlns:controls="using:Commands.Controls"
     d:DataContext="{d:DesignInstance Type=viewmodels:CommandDetailViewModel}"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="CommandLineTemplate" x:DataType="models:Action">
+            <StackPanel 
+                CornerRadius="{ThemeResource ControlCornerRadius}"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                Padding="{ThemeResource ListBoxItemPadding}"
+                Margin="{ThemeResource SmallTopMargin}">
+                
+                <controls:ActionHeaderControl PluginName="{x:Bind PluginName}"/>
+
+                <TextBox 
+                    Margin="{StaticResource SmallTopMargin}"
+                    ScrollViewer.HorizontalScrollMode="Auto"
+                    Text="{x:Bind Parameters['Script'], Mode=TwoWay}"/>
+
+                <ToggleSwitch 
+                    Margin="{StaticResource SmallTopMargin}"
+                    OnContent="Keep window open" 
+                    OffContent="Close window after finishing" 
+                    IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TextInputTemplate" x:DataType="models:Action">
+            <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemAccentColor}">
+                <TextBlock Text="{x:Bind PluginName}" />
+            </Button>
+        </DataTemplate>
+
+        <helpers:ActionDataTemplateSelector x:Key="ActionDataTemplateSelector"
+            CommandLineTemplate="{StaticResource CommandLineTemplate}"
+            TextInputTemplate="{StaticResource TextInputTemplate}"/>
+
+    </Page.Resources>
 
     <Grid RowDefinitions="*, Auto">
         <Grid Grid.Row="0">
@@ -24,36 +59,8 @@
                     <TextBlock Margin="{ThemeResource MediumTopMargin}" Text="Actions:" />
                     <ItemsRepeater 
                         ItemsSource="{x:Bind ViewModel.Command.Actions, Mode=OneWay}" 
+                        ItemTemplate="{StaticResource ActionDataTemplateSelector}"
                         HorizontalAlignment="Left">
-                        <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType='models:Action'>
-                                <StackPanel 
-                                    CornerRadius="{ThemeResource ControlCornerRadius}"
-                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                    Padding="{ThemeResource ListBoxItemPadding}"
-                                    Margin="{ThemeResource SmallTopMargin}"
-                                    CanDrag="False">
-
-                                    <Grid>
-                                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                                            <ImageIcon 
-                                                Width="16"
-                                                Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(PluginName)}" />
-                                            <TextBlock Text="{x:Bind PluginName}" Margin="{StaticResource XSmallLeftMargin}" />
-                                        </StackPanel>
-
-                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                            <Button Margin="{StaticResource XSmallLeftMargin}">
-                                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8BB;" FontSize="14"/>
-                                            </Button>
-                                        </StackPanel>
-                                    </Grid>
-
-                                    {{helpers:ActionLayoutResolverHelper.GetLayoutTemplate(PluginName)}}
-
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsRepeater.ItemTemplate>
                     </ItemsRepeater>
                     <DropDownButton Content="Add new action" Margin="{StaticResource SmallTopMargin}">
                         <DropDownButton.Flyout>
