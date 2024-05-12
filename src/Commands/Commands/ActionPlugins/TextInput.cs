@@ -10,6 +10,13 @@ public class TextInput : IActionPlugin
 
     public ActionType Type => ActionType.UI;
 
+    public Dictionary<string, string> GetDefaultParameters() => new()
+    {
+        { "Placeholder", string.Empty },
+        { "DefaultValue", string.Empty },
+        { "VariableName", string.Empty }
+    };
+
     public async Task ExecuteAsync(Core.Models.Action action, CommandExecutorContext context)
     {
         var inputTextBox = new TextBox
@@ -17,6 +24,7 @@ public class TextInput : IActionPlugin
             AcceptsReturn = false,
             Height = 32,
             PlaceholderText = action.Parameters["Placeholder"],
+            Text = action.Parameters["DefaultValue"]
         };
         var dialog = new ContentDialog
         {

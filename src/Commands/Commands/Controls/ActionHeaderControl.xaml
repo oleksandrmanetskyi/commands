@@ -7,18 +7,25 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helpers="using:Commands.Helpers" xmlns:viewmodels="using:Commands.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:CommandDetailViewModel}"
     mc:Ignorable="d">
 
-    <Grid>
-        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-            <ImageIcon 
-                Width="16"
-                Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(PluginName)}" />
-            <TextBlock Text="{x:Bind PluginName}" Margin="{StaticResource XSmallLeftMargin}" />
-        </StackPanel>
+    <StackPanel 
+        CornerRadius="{ThemeResource ControlCornerRadius}"
+        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+        Padding="{ThemeResource ListBoxItemPadding}"
+        Margin="{ThemeResource SmallTopMargin}">
+        <Grid>
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                <ImageIcon 
+                    Width="16"
+                    Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(PluginName)}" />
+                <TextBlock Text="{x:Bind PluginName}" Margin="{StaticResource XSmallLeftMargin}" />
+            </StackPanel>
 
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-            <Button Margin="{StaticResource XSmallLeftMargin}">
-                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8BB;" FontSize="14"/>
-            </Button>
-        </StackPanel>
-    </Grid>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Margin="{StaticResource XSmallLeftMargin}">
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8BB;" FontSize="14"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <ContentPresenter Content="{x:Bind ContentInside}"/>
+    </StackPanel>
 </UserControl>

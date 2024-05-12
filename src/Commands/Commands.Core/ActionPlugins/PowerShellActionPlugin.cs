@@ -17,6 +17,15 @@ public class PowerShellActionPlugin : IActionPlugin
         return true;
     }
 
+    public Dictionary<string, string> GetDefaultParameters()
+    {
+        return new()
+        {
+            { "Script", string.Empty },
+            { "KeepShowWindow", "false" }
+        };
+    }
+
     public async Task ExecuteAsync(Models.Action action, CommandExecutorContext _)
     {
         var keepShowWindow = action.Parameters["KeepShowWindow"].ToLower() == "true";

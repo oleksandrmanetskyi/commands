@@ -52,15 +52,16 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     public void CreateNewAction(string actionName)
     {
+        // TODO: Mode to action plugin definition
         var layout = actionName == new TextInput().Name ? Layouts.TextInput : Layouts.CommandLine;
+
+        var actionPlugin = actionsService.GetActionPluginByName(actionName) 
+            ?? throw new InvalidOperationException($"Action plugin {actionName} not found");
+        
         Command?.Actions.Add(new Core.Models.Action()
         {
             PluginName = actionName,
-            Parameters = new()
-            {
-                { "Script", "" },
-                { "KeepShowWindow", "false" }
-            },
+            Parameters = actionPlugin.GetDefaultParameters(),
             Layout = layout,
         });
     }

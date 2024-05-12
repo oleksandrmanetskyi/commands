@@ -14,31 +14,44 @@
 
     <Page.Resources>
         <DataTemplate x:Key="CommandLineTemplate" x:DataType="models:Action">
-            <StackPanel 
-                CornerRadius="{ThemeResource ControlCornerRadius}"
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                Padding="{ThemeResource ListBoxItemPadding}"
-                Margin="{ThemeResource SmallTopMargin}">
-                
-                <controls:ActionHeaderControl PluginName="{x:Bind PluginName}"/>
+            <controls:ActionHeaderControl PluginName="{x:Bind PluginName}">
+                <controls:ActionHeaderControl.ContentInside>
+                    <StackPanel>
+                        <TextBox 
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="Script:"
+                            ScrollViewer.HorizontalScrollMode="Auto"
+                            Text="{x:Bind Parameters['Script'], Mode=TwoWay}" />
 
-                <TextBox 
-                    Margin="{StaticResource SmallTopMargin}"
-                    ScrollViewer.HorizontalScrollMode="Auto"
-                    Text="{x:Bind Parameters['Script'], Mode=TwoWay}"/>
-
-                <ToggleSwitch 
-                    Margin="{StaticResource SmallTopMargin}"
-                    OnContent="Keep window open" 
-                    OffContent="Close window after finishing" 
-                    IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}" />
-            </StackPanel>
+                        <ToggleSwitch 
+                            Margin="{StaticResource SmallTopMargin}"
+                            OnContent="Keep window open" 
+                            OffContent="Close window after finishing" 
+                            IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}" />
+                    </StackPanel>
+                </controls:ActionHeaderControl.ContentInside>
+            </controls:ActionHeaderControl>
         </DataTemplate>
 
         <DataTemplate x:Key="TextInputTemplate" x:DataType="models:Action">
-            <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{ThemeResource SystemAccentColor}">
-                <TextBlock Text="{x:Bind PluginName}" />
-            </Button>
+            <controls:ActionHeaderControl PluginName="{x:Bind PluginName}">
+                <controls:ActionHeaderControl.ContentInside>
+                    <StackPanel>
+                        <TextBox 
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="Placeholder:"
+                            Text="{x:Bind Parameters['Placeholder'], Mode=TwoWay}"/>
+                        <TextBox 
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="Default value:"
+                            Text="{x:Bind Parameters['DefaultValue'], Mode=TwoWay}"/>
+                        <TextBox 
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="Save to variable:"
+                            Text="{x:Bind Parameters['VariableName'], Mode=TwoWay}"/>
+                    </StackPanel>
+                </controls:ActionHeaderControl.ContentInside>
+            </controls:ActionHeaderControl>
         </DataTemplate>
 
         <helpers:ActionDataTemplateSelector x:Key="ActionDataTemplateSelector"

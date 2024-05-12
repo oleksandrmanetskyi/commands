@@ -1,4 +1,6 @@
-﻿namespace Commands.Core.Models;
+﻿using Commands.Core.Services;
+
+namespace Commands.Core.Models;
 
 public class Action
 {

@@ -22,10 +22,12 @@
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
+    <DefaultLanguage>en-US</DefaultLanguage>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\CreateWorkspaceDialogContent.xaml" />
     <None Remove="Controls\ActionHeaderControl.xaml" />
+    <None Remove="Controls\TextBoxWithVariables.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +51,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\TextBoxWithVariables.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\CreateWorkspaceDialogContent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

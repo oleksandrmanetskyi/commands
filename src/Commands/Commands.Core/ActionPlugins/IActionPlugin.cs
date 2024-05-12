@@ -13,5 +13,6 @@ public interface IActionPlugin
     string Name { get; }
     ActionType Type { get; }
     bool IsAvailable();
+    Dictionary<string, string> GetDefaultParameters();
     Task ExecuteAsync(Models.Action action, CommandExecutorContext context);
 }
