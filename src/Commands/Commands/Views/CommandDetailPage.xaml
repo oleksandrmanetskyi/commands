@@ -17,38 +17,50 @@
             <controls:ActionHeaderControl PluginName="{x:Bind PluginName}">
                 <controls:ActionHeaderControl.ContentInside>
                     <StackPanel>
-                        <TextBox 
+                        <TextBox
                             Margin="{StaticResource SmallTopMargin}"
-                            Header="Script:"
+                            Header="Execute the following script"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             Text="{x:Bind Parameters['Script'], Mode=TwoWay}" />
-
                         <ToggleSwitch 
                             Margin="{StaticResource SmallTopMargin}"
                             OnContent="Keep window open" 
                             OffContent="Close window after finishing" 
-                            IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}" />
+                            IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="And save output to" VerticalAlignment="Center" />
+                            <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                            </Border>
+                            <TextBlock Text="and error to" VerticalAlignment="Center" />
+                            <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                <TextBlock Text="{x:Bind VariableNames[1], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                            </Border>
+                        </StackPanel>
+                        
                     </StackPanel>
                 </controls:ActionHeaderControl.ContentInside>
             </controls:ActionHeaderControl>
         </DataTemplate>
 
-        <DataTemplate x:Key="TextInputTemplate" x:DataType="models:Action">
+        <DataTemplate x:Key="UserInputTemplate" x:DataType="models:Action">
             <controls:ActionHeaderControl PluginName="{x:Bind PluginName}">
                 <controls:ActionHeaderControl.ContentInside>
                     <StackPanel>
                         <TextBox 
                             Margin="{StaticResource SmallTopMargin}"
-                            Header="Placeholder:"
+                            Header="Show user input with the following placeholder"
                             Text="{x:Bind Parameters['Placeholder'], Mode=TwoWay}"/>
                         <TextBox 
                             Margin="{StaticResource SmallTopMargin}"
-                            Header="Default value:"
+                            Header="Use the following default value"
                             Text="{x:Bind Parameters['DefaultValue'], Mode=TwoWay}"/>
-                        <TextBox 
-                            Margin="{StaticResource SmallTopMargin}"
-                            Header="Save to variable:"
-                            Text="{x:Bind Parameters['VariableName'], Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="{StaticResource SmallTopMargin}">
+                            <TextBlock Text="And save input to" VerticalAlignment="Center" />
+                            <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                            </Border>
+                        </StackPanel>
                     </StackPanel>
                 </controls:ActionHeaderControl.ContentInside>
             </controls:ActionHeaderControl>
@@ -56,7 +68,7 @@
 
         <helpers:ActionDataTemplateSelector x:Key="ActionDataTemplateSelector"
             CommandLineTemplate="{StaticResource CommandLineTemplate}"
-            TextInputTemplate="{StaticResource TextInputTemplate}"/>
+            UserInputTemplate="{StaticResource UserInputTemplate}"/>
 
     </Page.Resources>
 

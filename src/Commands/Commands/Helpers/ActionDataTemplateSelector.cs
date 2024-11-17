@@ -5,17 +5,17 @@ using Microsoft.UI.Xaml.Controls;
 namespace Commands.Helpers;
 public class ActionDataTemplateSelector: DataTemplateSelector
 {
-    public DataTemplate CommandLineTemplate { get; set; }
-    public DataTemplate TextInputTemplate { get; set; }
+    public DataTemplate? CommandLineTemplate { get; set; }
+    public DataTemplate? UserInputTemplate { get; set; }
 
-    protected override DataTemplate SelectTemplateCore(object item)
+    protected override DataTemplate? SelectTemplateCore(object item)
     {
         if (item is Core.Models.Action action)
         {
             return action.Layout switch
             {
                 Layouts.CommandLine => CommandLineTemplate,
-                Layouts.TextInput => TextInputTemplate,
+                Layouts.UserInput => UserInputTemplate,
                 _ => throw new NotImplementedException(),
             };
         }

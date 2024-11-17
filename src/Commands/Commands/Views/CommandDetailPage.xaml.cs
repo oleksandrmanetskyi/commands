@@ -1,8 +1,6 @@
-﻿using System.Text.RegularExpressions;
-using Commands.Behaviors;
+﻿using Commands.Behaviors;
 using Commands.Core.ActionPlugins;
 using Commands.ViewModels;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 

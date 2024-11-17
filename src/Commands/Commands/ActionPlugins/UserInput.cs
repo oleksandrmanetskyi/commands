@@ -4,9 +4,9 @@ using Microsoft.UI.Xaml.Controls;
 
 namespace Commands.ActionPlugins;
 
-public class TextInput : IActionPlugin
+public class UserInput : IActionPlugin
 {
-    public string Name => "Text Input";
+    public string Name => "User Input";
 
     public ActionType Type => ActionType.UI;
 
@@ -14,7 +14,6 @@ public class TextInput : IActionPlugin
     {
         { "Placeholder", string.Empty },
         { "DefaultValue", string.Empty },
-        { "VariableName", string.Empty }
     };
 
     public async Task ExecuteAsync(Core.Models.Action action, CommandExecutorContext context)
@@ -38,7 +37,7 @@ public class TextInput : IActionPlugin
 
         if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {
-            context.Variables[action.Parameters["VariableName"]] = new VariableInfo
+            context.Variables[action.VariableNames[0]] = new VariableInfo
             {
                 Value = inputTextBox.Text,
                 Type = typeof(string)
@@ -46,4 +45,5 @@ public class TextInput : IActionPlugin
         }
     }
     public bool IsAvailable() => true;
+    public IEnumerable<string> GetVariableNames() => new List<string> { "UserInput" };
 }

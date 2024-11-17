@@ -14,9 +14,7 @@
         Margin="{ThemeResource SmallTopMargin}">
         <Grid>
             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                <ImageIcon 
-                    Width="16"
-                    Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(PluginName)}" />
+                <ImageIcon Width="16" Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(PluginName)}" />
                 <TextBlock Text="{x:Bind PluginName}" Margin="{StaticResource XSmallLeftMargin}" />
             </StackPanel>
 

@@ -3,5 +3,5 @@
 public enum Layouts
 {
     CommandLine,
-    TextInput,
+    UserInput,
 }

@@ -14,6 +14,6 @@ public class UiActionPluginsInitializer
 
     public void Initialize()
     {
-        service.RegisterActionIfAvailable<TextInput>();
+        service.RegisterActionIfAvailable<UserInput>();
     }
 }
