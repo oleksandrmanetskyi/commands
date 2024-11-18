@@ -1,8 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-
 using Commands.Contracts.Services;
 using Commands.Contracts.ViewModels;
-using Commands.Core.Contracts.Services;
 using Commands.Core.Models;
 using Commands.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;

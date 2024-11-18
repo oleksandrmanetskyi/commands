@@ -61,13 +61,17 @@ public partial class App : Application
             services.AddSingleton<INavigationService, NavigationService>();
 
             // Core Services
-            services.AddSingleton<ICommandsDataService, CommandsDataService>();
+            // services.AddSingleton<ICommandsDataService, CommandsDataService>();
             services.AddSingleton<IFileService, FileService>();
-            services.AddSingleton<ActionsService>();
+            services.AddSingleton<ActionsRegistry>();
             services.AddSingleton<WorkspacesDataService>();
 
             // Plugins Initializer
-            services.AddSingleton<ActionPluginsInitializer>();
+            services.AddSingleton<CoreActionPluginsInitializer>();
+            services.AddSingleton<UiActionPluginsInitializer>();
+
+            // Command Executor
+            services.AddScoped<CommandExecutor>();
 
             // Views and ViewModels
             services.AddTransient<SettingsViewModel>();
@@ -84,7 +88,8 @@ public partial class App : Application
         Build();
 
         GetService<IAppNotificationService>().Initialize();
-        GetService<ActionPluginsInitializer>().Initialize();
+        GetService<CoreActionPluginsInitializer>().Initialize();
+        GetService<UiActionPluginsInitializer>().Initialize();
 
         UnhandledException += App_UnhandledException;
     }

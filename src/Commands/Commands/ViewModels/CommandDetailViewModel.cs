@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+using Commands.ActionPlugins;
 using Commands.Contracts.ViewModels;
+using Commands.Core;
 using Commands.Core.ActionPlugins;
 using Commands.Core.Models;
 using Commands.Core.Services;
@@ -17,15 +18,23 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     public bool RunButtonEnabled { get; set; }
 
     private readonly WorkspacesDataService workspacesDataService;
-    private readonly ActionsService actionsService;
+    private readonly ActionsRegistry actionsService;
+    private readonly CommandExecutor commandExecutor;
+
+    private readonly List<string> variables;
 
     [ObservableProperty]
     private Command? command;
 
-    public CommandDetailViewModel(WorkspacesDataService workspacesDataService, ActionsService actionsService)
+    public CommandDetailViewModel(
+        WorkspacesDataService workspacesDataService, ActionsRegistry actionsService, CommandExecutor commandExecutor)
     {
         this.workspacesDataService = workspacesDataService;
         this.actionsService = actionsService;
+        this.commandExecutor = commandExecutor;
+
+        variables = new List<string>();
+
         RunButtonEnabled = true;
 
         RunButtonClickCommand = new AsyncRelayCommand(ExecuteAsync);
@@ -47,14 +56,20 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     public void CreateNewAction(string actionName)
     {
+        // TODO: Mode to action plugin definition
+        var layout = actionName == new UserInput().Name ? Layouts.UserInput : Layouts.CommandLine;
+
+        var actionPlugin = actionsService.GetActionPluginByName(actionName) 
+            ?? throw new InvalidOperationException($"Action plugin {actionName} not found");
+
+        var variableNames = actionPlugin.GetVariableNames().Select(CreateVariable);
+
         Command?.Actions.Add(new Core.Models.Action()
         {
             PluginName = actionName,
-            Parameters = new()
-            {
-                { "Script", "" },
-                { "KeepShowWindow", "false" }
-            }
+            Parameters = actionPlugin.GetDefaultParameters(),
+            Layout = layout,
+            VariableNames = variableNames.ToList()
         });
     }
 
@@ -62,6 +77,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     {
         return actionsService.GetActionPlugins();
     }
+
     public Visibility CommandStarredVisibility(bool starredOption)
     {
         if ((starredOption && Command!.Starred) || (!starredOption && !Command!.Starred))
@@ -74,6 +90,15 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         }
     }
 
+    public void RenameVariable(string oldVariableName, string newVariableName)
+    {
+        if (variables.Contains(oldVariableName))
+        {
+            variables.Remove(oldVariableName);
+            variables.Add(newVariableName);
+        }
+    }
+
     private async Task ExecuteAsync()
     {
         if (command == null)
@@ -82,19 +107,34 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         }
 
         RunButtonEnabled = false;
-        foreach (var action in command.Actions)
-        {
-            var handler = actionsService.GetActionPluginByName(action.PluginName);
-            if (handler != null)
-            {
-                await handler.ExecuteAsync(action);
-            }
-        }
+        await commandExecutor.ExecuteAsync(command);
         RunButtonEnabled = true;
     }
 
     private void StarCommand()
     {
-        Command!.Starred = !Command.Starred;
+        if (Command != null)
+        {
+            Command.Starred = !Command.Starred;
+        }
+        
+    }
+
+    private string CreateVariable(string variableName)
+    {
+        var result = variableName;
+        if (variables.Contains(variableName))
+        {
+            var i = 1;
+            while (variables.Contains(result))
+            {
+                result = $"{variableName}{i}";
+                i++;
+            }
+        }
+
+        variables.Add(result);
+
+        return result;
     }
 }

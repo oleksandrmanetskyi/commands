@@ -1,8 +1,11 @@
-﻿namespace Commands.Core.ActionPlugins;
+﻿using Commands.Core.Models;
+
+namespace Commands.Core.ActionPlugins;
 
 public enum ActionType
 {
-    CommandLine
+    CommandLine,
+    UI
 }
 
 public interface IActionPlugin
@@ -10,5 +13,7 @@ public interface IActionPlugin
     string Name { get; }
     ActionType Type { get; }
     bool IsAvailable();
-    Task ExecuteAsync(Models.Action action);
+    Dictionary<string, string> GetDefaultParameters();
+    IEnumerable<string> GetVariableNames();
+    Task ExecuteAsync(Models.Action action, CommandExecutorContext context);
 }

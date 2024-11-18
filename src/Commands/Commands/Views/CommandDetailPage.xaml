@@ -8,9 +8,69 @@
     xmlns:models="using:Commands.Core.Models"
     xmlns:actionPlugins="using:Commands.Core.ActionPlugins"
     xmlns:helpers="using:Commands.Helpers" 
-    xmlns:behaviors="using:Commands.Behaviors" 
+    xmlns:behaviors="using:Commands.Behaviors" xmlns:controls="using:Commands.Controls"
     d:DataContext="{d:DesignInstance Type=viewmodels:CommandDetailViewModel}"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="CommandLineTemplate" x:DataType="models:Action">
+            <controls:ActionHeaderControl PluginName="{x:Bind PluginName}">
+                <controls:ActionHeaderControl.ContentInside>
+                    <StackPanel>
+                        <TextBox
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="Execute the following script"
+                            ScrollViewer.HorizontalScrollMode="Auto"
+                            Text="{x:Bind Parameters['Script'], Mode=TwoWay}" />
+                        <ToggleSwitch 
+                            Margin="{StaticResource SmallTopMargin}"
+                            OnContent="Keep window open" 
+                            OffContent="Close window after finishing" 
+                            IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="And save output to" VerticalAlignment="Center" />
+                            <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                            </Border>
+                            <TextBlock Text="and error to" VerticalAlignment="Center" Margin="{StaticResource XSmallLeftMargin}"/>
+                            <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                <TextBlock Text="{x:Bind VariableNames[1], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                            </Border>
+                        </StackPanel>
+                        
+                    </StackPanel>
+                </controls:ActionHeaderControl.ContentInside>
+            </controls:ActionHeaderControl>
+        </DataTemplate>
+
+        <DataTemplate x:Key="UserInputTemplate" x:DataType="models:Action">
+            <controls:ActionHeaderControl PluginName="{x:Bind PluginName}">
+                <controls:ActionHeaderControl.ContentInside>
+                    <StackPanel>
+                        <TextBox 
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="Show user input with the following placeholder"
+                            Text="{x:Bind Parameters['Placeholder'], Mode=TwoWay}"/>
+                        <TextBox 
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="Use the following default value"
+                            Text="{x:Bind Parameters['DefaultValue'], Mode=TwoWay}"/>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="{StaticResource SmallTopMargin}">
+                            <TextBlock Text="And save input to" VerticalAlignment="Center" />
+                            <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </controls:ActionHeaderControl.ContentInside>
+            </controls:ActionHeaderControl>
+        </DataTemplate>
+
+        <helpers:ActionDataTemplateSelector x:Key="ActionDataTemplateSelector"
+            CommandLineTemplate="{StaticResource CommandLineTemplate}"
+            UserInputTemplate="{StaticResource UserInputTemplate}"/>
+
+    </Page.Resources>
 
     <Grid RowDefinitions="*, Auto">
         <Grid Grid.Row="0">
@@ -24,45 +84,8 @@
                     <TextBlock Margin="{ThemeResource MediumTopMargin}" Text="Actions:" />
                     <ItemsRepeater 
                         ItemsSource="{x:Bind ViewModel.Command.Actions, Mode=OneWay}" 
+                        ItemTemplate="{StaticResource ActionDataTemplateSelector}"
                         HorizontalAlignment="Left">
-                        <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType='models:Action'>
-                                <StackPanel 
-                                    CornerRadius="{ThemeResource ControlCornerRadius}"
-                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                    Padding="{ThemeResource ListBoxItemPadding}"
-                                    Margin="{ThemeResource SmallTopMargin}"
-                                    CanDrag="True">
-
-                                    <Grid>
-                                        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
-                                            <ImageIcon 
-                                                Width="16"
-                                                Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(PluginName)}" />
-                                            <TextBlock Text="{x:Bind PluginName}" Margin="{StaticResource XSmallLeftMargin}" />
-                                        </StackPanel>
-
-                                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                                            <Button Margin="{StaticResource XSmallLeftMargin}">
-                                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8BB;" FontSize="14"/>
-                                            </Button>
-                                        </StackPanel>
-                                    </Grid>
-
-                                    <TextBox 
-                                        Margin="{StaticResource SmallTopMargin}"
-                                        ScrollViewer.HorizontalScrollMode="Auto"
-                                        Text="{x:Bind Parameters['Script'], Mode=TwoWay}"/>
-
-                                    <ToggleSwitch 
-                                        Margin="{StaticResource SmallTopMargin}"
-                                        OnContent="Keep window open" 
-                                        OffContent="Close window after finishing" 
-                                        IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}" />
-
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsRepeater.ItemTemplate>
                     </ItemsRepeater>
                     <DropDownButton Content="Add new action" Margin="{StaticResource SmallTopMargin}">
                         <DropDownButton.Flyout>
