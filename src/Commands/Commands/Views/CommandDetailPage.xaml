@@ -32,7 +32,7 @@
                             <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
                                 <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
                             </Border>
-                            <TextBlock Text="and error to" VerticalAlignment="Center" />
+                            <TextBlock Text="and error to" VerticalAlignment="Center" Margin="{StaticResource XSmallLeftMargin}"/>
                             <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
                                 <TextBlock Text="{x:Bind VariableNames[1], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
                             </Border>
