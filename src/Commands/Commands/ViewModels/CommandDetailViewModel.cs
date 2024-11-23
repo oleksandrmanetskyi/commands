@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Text;
+using System.Windows.Input;
 using Commands.ActionPlugins;
 using Commands.Contracts.ViewModels;
 using Commands.Core;
@@ -8,6 +9,7 @@ using Commands.Core.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
+using Windows.UI.Popups;
 
 namespace Commands.ViewModels;
 
@@ -15,7 +17,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 {
     public ICommand RunButtonClickCommand { get; }
     public ICommand StarCommandButtonClickCommand { get; }
-    public bool RunButtonEnabled { get; set; }
+    public ICommand CancelCommandButtonClickCommand { get; }
 
     private readonly WorkspacesDataService workspacesDataService;
     private readonly ActionsRegistry actionsService;
@@ -25,6 +27,10 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     [ObservableProperty]
     private Command? command;
+    [ObservableProperty]
+    private bool commandIsRunning;
+    [ObservableProperty]
+    private StringBuilder commandOutput;
 
     public CommandDetailViewModel(
         WorkspacesDataService workspacesDataService, ActionsRegistry actionsService, CommandExecutor commandExecutor)
@@ -35,10 +41,11 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
         variables = new List<string>();
 
-        RunButtonEnabled = true;
+        CommandIsRunning = false;
 
         RunButtonClickCommand = new AsyncRelayCommand(ExecuteAsync);
         StarCommandButtonClickCommand = new RelayCommand(StarCommand);
+        CancelCommandButtonClickCommand = new RelayCommand(CancelCommand);
     }
 
     public void OnNavigatedTo(object parameter)
@@ -51,7 +58,10 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     public void OnNavigatedFrom()
     {
-
+        if (CommandIsRunning)
+        {
+            return;
+        }
     }
 
     public void CreateNewAction(string actionName)
@@ -106,9 +116,9 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
             return;
         }
 
-        RunButtonEnabled = false;
+        CommandIsRunning = true;
         await commandExecutor.ExecuteAsync(command);
-        RunButtonEnabled = true;
+        CommandIsRunning = false;
     }
 
     private void StarCommand()
@@ -117,7 +127,16 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         {
             Command.Starred = !Command.Starred;
         }
-        
+    }
+
+    private void CancelCommand()
+    {
+        if (!CommandIsRunning)
+        {
+            return;
+        }
+
+        // todo cancel
     }
 
     private string CreateVariable(string variableName)
