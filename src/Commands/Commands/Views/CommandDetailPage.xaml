@@ -20,21 +20,18 @@
                         <TextBox
                             Margin="{StaticResource SmallTopMargin}"
                             Header="Execute the following script"
+                            IsSpellCheckEnabled="False"
+                            AcceptsReturn="True"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             Text="{x:Bind Parameters['Script'], Mode=TwoWay}" />
-                        <ToggleSwitch 
-                            Margin="{StaticResource SmallTopMargin}"
-                            OnContent="Keep window open" 
-                            OffContent="Close window after finishing" 
-                            IsOn="{x:Bind Parameters['KeepShowWindow'], Mode=TwoWay}"/>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Text="And save output to" VerticalAlignment="Center" />
                             <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
-                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
                             </Border>
                             <TextBlock Text="and error to" VerticalAlignment="Center" Margin="{StaticResource XSmallLeftMargin}"/>
                             <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
-                                <TextBlock Text="{x:Bind VariableNames[1], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                                <TextBlock Text="{x:Bind VariableNames[1], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
                             </Border>
                         </StackPanel>
                         
@@ -76,7 +73,7 @@
     <Grid>
         <Grid 
             RowDefinitions="*, Auto" 
-            Visibility="{x:Bind ViewModel.CommandIsRunning, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}">
+            Visibility="{x:Bind ViewModel.CommandOutputViewOpened, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}">
             <Grid Grid.Row="0">
                 <ScrollViewer>
                     <StackPanel HorizontalAlignment="Stretch">
@@ -144,18 +141,22 @@
         </Grid>
         <Grid 
             x:Name="OutputWindow" 
-            Visibility="{x:Bind ViewModel.CommandIsRunning, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" >
+            Visibility="{x:Bind ViewModel.CommandOutputViewOpened, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
+            RowDefinitions="*, Auto, *"
+            VerticalAlignment="Stretch">
             <StackPanel>
-                <ProgressBar IsIndeterminate="True" Width="300" />
-                <TextBlock
-                    Name="Execution Output:"
+                <ProgressBar 
+                    Grid.Row="0"
+                    IsIndeterminate="True"
+                    Width="300" 
+                    Visibility="{x:Bind ViewModel.CommandIsRunning, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <TextBox
+                    Grid.Row="1"
+                    Margin="{StaticResource SmallTopMargin}"
                     Text="{x:Bind ViewModel.CommandOutput, Mode=OneWay}"
                     TextWrapping="Wrap"
-                    VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch"
-                    Height="300"
-                    Width="600" />
-                <Button Content="Cancel" Command="{x:Bind ViewModel.CancelCommandButtonClickCommand}" />
+                    IsReadOnly="True"/>
+                <Button Grid.Row="2" Margin="{StaticResource SmallTopMargin}" Content="Close" Command="{x:Bind ViewModel.CloseOutputCommandButtonClickCommand}" />
             </StackPanel>
         </Grid>
     </Grid>

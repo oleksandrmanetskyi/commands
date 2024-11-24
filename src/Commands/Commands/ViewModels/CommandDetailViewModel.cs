@@ -17,7 +17,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 {
     public ICommand RunButtonClickCommand { get; }
     public ICommand StarCommandButtonClickCommand { get; }
-    public ICommand CancelCommandButtonClickCommand { get; }
+    public ICommand CloseOutputCommandButtonClickCommand { get; }
 
     private readonly WorkspacesDataService workspacesDataService;
     private readonly ActionsRegistry actionsService;
@@ -30,7 +30,9 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     [ObservableProperty]
     private bool commandIsRunning;
     [ObservableProperty]
-    private StringBuilder commandOutput;
+    private string? commandOutput;
+    [ObservableProperty]
+    private bool commandOutputViewOpened;
 
     public CommandDetailViewModel(
         WorkspacesDataService workspacesDataService, ActionsRegistry actionsService, CommandExecutor commandExecutor)
@@ -42,10 +44,11 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         variables = new List<string>();
 
         CommandIsRunning = false;
+        CommandOutputViewOpened = false;
 
         RunButtonClickCommand = new AsyncRelayCommand(ExecuteAsync);
         StarCommandButtonClickCommand = new RelayCommand(StarCommand);
-        CancelCommandButtonClickCommand = new RelayCommand(CancelCommand);
+        CloseOutputCommandButtonClickCommand = new RelayCommand(CloseOutput);
     }
 
     public void OnNavigatedTo(object parameter)
@@ -62,6 +65,11 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         {
             return;
         }
+    }
+
+    public void OnOutputDataReceived(string output)
+    {
+        CommandOutput += output;
     }
 
     public void CreateNewAction(string actionName)
@@ -117,7 +125,8 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         }
 
         CommandIsRunning = true;
-        await commandExecutor.ExecuteAsync(command);
+        CommandOutputViewOpened = true;
+        await commandExecutor.ExecuteAsync(command, OnOutputDataReceived);
         CommandIsRunning = false;
     }
 
@@ -129,13 +138,10 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         }
     }
 
-    private void CancelCommand()
+    private void CloseOutput()
     {
-        if (!CommandIsRunning)
-        {
-            return;
-        }
-
+        CommandOutputViewOpened = false;
+        CommandOutput = string.Empty;
         // todo cancel
     }
 

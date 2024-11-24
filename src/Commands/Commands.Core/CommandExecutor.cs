@@ -12,7 +12,7 @@ public partial class CommandExecutor
     {
         this.actionsService = actionsService;
     }
-    public async Task ExecuteAsync(Command command)
+    public async Task ExecuteAsync(Command command, Action<string> outputDataReceivedHandler)
     {
         var context = new CommandExecutorContext();
 
@@ -23,7 +23,7 @@ public partial class CommandExecutor
             {
                 // TODO: Change name
                 action.Parameters = InterpolateStrings(action.Parameters, context);
-                await handler.ExecuteAsync(action, context);
+                await handler.ExecuteAsync(action, context, outputDataReceivedHandler);
             }
         }
     }
