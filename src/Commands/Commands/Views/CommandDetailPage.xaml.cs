@@ -32,4 +32,33 @@ public sealed partial class CommandsDetailPage : Page
             ViewModel.CreateNewAction(item.Name);
         }
     }
+
+    private void TextBlock_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    {
+        if (sender is TextBlock textBlock)
+        {
+            var name = textBlock.Text;
+            var inputTextBox = new TextBox
+            {
+                AcceptsReturn = false,
+                Height = 32,
+                Text = name
+            };
+            var dialog = new ContentDialog
+            {
+                XamlRoot = App.MainWindow.Content.XamlRoot,
+                Content = inputTextBox,
+                Title = "Input new variable name",
+                IsSecondaryButtonEnabled = true,
+                PrimaryButtonText = "Ok",
+                SecondaryButtonText = "Cancel"
+            };
+
+            if (dialog.ShowAsync().GetResults() == ContentDialogResult.Primary)
+            {
+                textBlock.Text = inputTextBox.Text;
+            }
+        }
+        
+    }
 }

@@ -16,7 +16,7 @@ public class UserInput : IActionPlugin
         { "DefaultValue", string.Empty },
     };
 
-    public async Task ExecuteAsync(Core.Models.Action action, CommandExecutorContext context)
+    public async Task ExecuteAsync(Core.Models.Action action, CommandExecutorContext context, Action<string> outputDataReceivedHandler)
     {
         var inputTextBox = new TextBox
         {
@@ -35,6 +35,7 @@ public class UserInput : IActionPlugin
             SecondaryButtonText = "Cancel"
         };
 
+        outputDataReceivedHandler($"Show dialog {inputTextBox.PlaceholderText}");
         if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {
             context.Variables[action.VariableNames[0]] = new VariableInfo

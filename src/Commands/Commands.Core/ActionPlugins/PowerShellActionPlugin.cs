@@ -26,7 +26,7 @@ public class PowerShellActionPlugin : IActionPlugin
         };
     }
 
-    public async Task ExecuteAsync(Models.Action action, CommandExecutorContext context)
+    public async Task ExecuteAsync(Models.Action action, CommandExecutorContext context, Action<string> outputDataReceivedHandler)
     {
         var keepShowWindow = action.Parameters["KeepShowWindow"].ToLower() == "true";
         var arguments = new StringBuilder();
@@ -43,11 +43,32 @@ public class PowerShellActionPlugin : IActionPlugin
             Arguments = arguments.ToString(),
             RedirectStandardOutput = true,
             RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
         };
 
-        using var process = Process.Start(start);
+        using var process = new Process
+        {
+            StartInfo = start,
+            EnableRaisingEvents = true
+        };
+
+        process.OutputDataReceived += (sender, args) =>
+        {
+            outputDataReceivedHandler(args.Data);
+        };
+        process.ErrorDataReceived += (sender, args) =>
+        {
+            if (args.Data != null)
+            {
+                outputDataReceivedHandler(args.Data);
+            }
+        };
+
+        process.Start();
 
         var output = await process.StandardOutput.ReadToEndAsync();
+        outputDataReceivedHandler(output);
         var error = await process.StandardError.ReadToEndAsync();
 
         await process.WaitForExitAsync();

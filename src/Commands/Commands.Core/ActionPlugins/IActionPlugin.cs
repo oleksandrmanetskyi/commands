@@ -15,5 +15,5 @@ public interface IActionPlugin
     bool IsAvailable();
     Dictionary<string, string> GetDefaultParameters();
     IEnumerable<string> GetVariableNames();
-    Task ExecuteAsync(Models.Action action, CommandExecutorContext context);
+    Task ExecuteAsync(Models.Action action, CommandExecutorContext context, Action<string> outputDataReceivedHandler);
 }

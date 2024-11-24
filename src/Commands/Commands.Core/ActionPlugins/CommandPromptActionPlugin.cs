@@ -26,7 +26,7 @@ public class CommandPromptActionPlugin : IActionPlugin
         };
     }
 
-    public async Task ExecuteAsync(Models.Action action, CommandExecutorContext context)
+    public async Task ExecuteAsync(Models.Action action, CommandExecutorContext context, Action<string> outputDataReceivedHandler)
     {
         var keepShowWindow = action.Parameters["KeepShowWindow"].ToLower() == "true";
         var arguments = new StringBuilder();
