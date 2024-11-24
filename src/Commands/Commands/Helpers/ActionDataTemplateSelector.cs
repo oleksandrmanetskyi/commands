@@ -7,6 +7,7 @@ public class ActionDataTemplateSelector: DataTemplateSelector
 {
     public DataTemplate? CommandLineTemplate { get; set; }
     public DataTemplate? UserInputTemplate { get; set; }
+    public DataTemplate? DisplayMessageTemplate { get; set; }
 
     protected override DataTemplate? SelectTemplateCore(object item)
     {
@@ -16,6 +17,7 @@ public class ActionDataTemplateSelector: DataTemplateSelector
             {
                 Layouts.CommandLine => CommandLineTemplate,
                 Layouts.UserInput => UserInputTemplate,
+                Layouts.DisplayMessage => DisplayMessageTemplate,
                 _ => throw new NotImplementedException(),
             };
         }

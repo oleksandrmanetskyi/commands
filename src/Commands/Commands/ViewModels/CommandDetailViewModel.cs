@@ -69,13 +69,17 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     public void OnOutputDataReceived(string output)
     {
-        CommandOutput += output;
+        CommandOutput += output + '\n';
     }
 
     public void CreateNewAction(string actionName)
     {
         // TODO: Mode to action plugin definition
-        var layout = actionName == new UserInput().Name ? Layouts.UserInput : Layouts.CommandLine;
+        var layout = actionName == new UserInput().Name 
+            ? Layouts.UserInput 
+            : actionName == new DisplayMessage().Name 
+            ? Layouts.DisplayMessage 
+            : Layouts.CommandLine;
 
         var actionPlugin = actionsService.GetActionPluginByName(actionName) 
             ?? throw new InvalidOperationException($"Action plugin {actionName} not found");

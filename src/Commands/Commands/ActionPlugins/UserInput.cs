@@ -18,6 +18,7 @@ public class UserInput : IActionPlugin
 
     public async Task ExecuteAsync(Core.Models.Action action, CommandExecutorContext context, Action<string> outputDataReceivedHandler)
     {
+        outputDataReceivedHandler($"[{DateTime.Now}] - Executing {Name} action");
         var inputTextBox = new TextBox
         {
             AcceptsReturn = false,

@@ -22,18 +22,13 @@ public class PowerShellActionPlugin : IActionPlugin
         return new()
         {
             { "Script", string.Empty },
-            { "KeepShowWindow", "false" }
         };
     }
 
     public async Task ExecuteAsync(Models.Action action, CommandExecutorContext context, Action<string> outputDataReceivedHandler)
     {
-        var keepShowWindow = action.Parameters["KeepShowWindow"].ToLower() == "true";
+        outputDataReceivedHandler($"[{DateTime.Now}] - Executing {Name} action");
         var arguments = new StringBuilder();
-        if (keepShowWindow)
-        {
-            arguments.Append("-NoExit");
-        }
         arguments.Append(" -Command \"");
         arguments.Append(action.Parameters["Script"] + '\"');
         

@@ -49,17 +49,19 @@ public class LocalStorageService : ILocalStorageService
 
     public async Task SaveDataAsync<T>(string name, T data, string? folderName = null)
     {
-        var folder = folderName == null ? localFolder : await localFolder.GetFolderAsync(folderName);
-        var dataFile = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
+        // var folder = folderName == null ? localFolder : await localFolder.GetFolderAsync(folderName);
+        // var dataFile = await folder.CreateFileAsync(name, CreationCollisionOption.ReplaceExisting);
         var fileContent = JsonConvert.SerializeObject(data);
-        await FileIO.WriteTextAsync(dataFile, fileContent);
+        // await FileIO.WriteTextAsync(dataFile, fileContent);
 
         // await fileService.SaveAsync(localFolder.Path, name, data);
     }
 
     public async IAsyncEnumerable<string> GetSavedDataNames(string? folderName = null)
     {
-        var folder = folderName == null ? localFolder : await localFolder.GetFolderAsync(folderName);
+        var folder = folderName == null 
+            ? localFolder 
+            : await localFolder.CreateFolderAsync(folderName, CreationCollisionOption.OpenIfExists);
         var items = await folder.GetFilesAsync();
         foreach (var item in items)
         {

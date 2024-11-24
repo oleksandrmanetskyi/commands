@@ -39,6 +39,8 @@ public class CommandsViewModel : ObservableRecipient, INavigationAware
         {
             Source.Add(item);
         }
+
+        workspacesDataService.SaveWorkspacesToApplicationData().Wait();
     }
 
     public void OnNavigatedFrom()

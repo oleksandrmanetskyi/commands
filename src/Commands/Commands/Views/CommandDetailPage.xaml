@@ -24,7 +24,7 @@
                             AcceptsReturn="True"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             Text="{x:Bind Parameters['Script'], Mode=TwoWay}" />
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="{StaticResource SmallTopMargin}">
                             <TextBlock Text="And save output to" VerticalAlignment="Center" />
                             <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
                                 <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
@@ -63,9 +63,27 @@
             </controls:ActionHeaderControl>
         </DataTemplate>
 
+        <DataTemplate x:Key="DisplayMessageTemplate" x:DataType="models:Action">
+            <controls:ActionHeaderControl PluginName="{x:Bind PluginName}">
+                <controls:ActionHeaderControl.ContentInside>
+                    <StackPanel>
+                        <TextBox 
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="Show message with the following text"
+                            Text="{x:Bind Parameters['Message'], Mode=TwoWay}"/>
+                        <TextBox 
+                            Margin="{StaticResource SmallTopMargin}"
+                            Header="With the following title"
+                            Text="{x:Bind Parameters['Title'], Mode=TwoWay}"/>
+                    </StackPanel>
+                </controls:ActionHeaderControl.ContentInside>
+            </controls:ActionHeaderControl>
+        </DataTemplate>
+
         <helpers:ActionDataTemplateSelector x:Key="ActionDataTemplateSelector"
             CommandLineTemplate="{StaticResource CommandLineTemplate}"
-            UserInputTemplate="{StaticResource UserInputTemplate}"/>
+            UserInputTemplate="{StaticResource UserInputTemplate}"
+            DisplayMessageTemplate="{StaticResource DisplayMessageTemplate}"/>
 
         <helpers:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Page.Resources>

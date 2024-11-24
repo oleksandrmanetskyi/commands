@@ -22,22 +22,23 @@ public class CommandPromptActionPlugin : IActionPlugin
         return new()
         {
             { "Script", string.Empty },
-            { "KeepShowWindow", "false" }
         };
     }
 
     public async Task ExecuteAsync(Models.Action action, CommandExecutorContext context, Action<string> outputDataReceivedHandler)
     {
-        var keepShowWindow = action.Parameters["KeepShowWindow"].ToLower() == "true";
         var arguments = new StringBuilder();
-        arguments.Append(keepShowWindow ? "/K " : "/C " );
+        arguments.Append("/C ");
         arguments.Append(action.Parameters["Script"]);
 
         var start = new ProcessStartInfo
         {
             FileName = commandLinePath,
             Arguments = arguments.ToString(),
-            UseShellExecute = true
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
         };
 
         using var process = Process.Start(start);

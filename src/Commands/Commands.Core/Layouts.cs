@@ -4,4 +4,5 @@ public enum Layouts
 {
     CommandLine,
     UserInput,
+    DisplayMessage
 }
