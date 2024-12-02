@@ -124,34 +124,34 @@
     <value>Commands</value>
   </data>
   <data name="Shell_Home.Content" xml:space="preserve">
-    <value>Home</value>
+    <value>Головна</value>
   </data>
   <data name="Shell_Commands.Content" xml:space="preserve">
-    <value>All Commands</value>
+    <value>Усі команди</value>
   </data>
   <data name="Settings_Personalization.Text" xml:space="preserve">
-    <value>Personalization</value>
+    <value>Персоналізація</value>
   </data>
   <data name="Settings_Theme.Text" xml:space="preserve">
-    <value>Theme</value>
+    <value>Тема</value>
   </data>
   <data name="Settings_Theme_Light.Content" xml:space="preserve">
-    <value>Light</value>
+    <value>Світла</value>
   </data>
   <data name="Settings_Theme_Dark.Content" xml:space="preserve">
-    <value>Dark</value>
+    <value>Темна</value>
   </data>
   <data name="Settings_Theme_Default.Content" xml:space="preserve">
-    <value>Default</value>
+    <value>Стандартна</value>
   </data>
   <data name="Settings_About.Text" xml:space="preserve">
-    <value>About this application</value>
+    <value>Про застосунок</value>
   </data>
   <data name="Settings_AboutDescription.Text" xml:space="preserve">
-    <value>This app alows you to create and execute commands.</value>
+    <value>Застосунок дозволяє створювати та запускати команди.</value>
   </data>
   <data name="SettingsPage_PrivacyTermsLink.Content" xml:space="preserve">
-    <value>Privacy Statement</value>
+    <value>Політика конфіденційності</value>
   </data>
   <data name="SettingsPage_PrivacyTermsLink.NavigateUri" xml:space="preserve">
     <value>https://YourPrivacyUrlGoesHere/</value>
@@ -171,75 +171,75 @@
 &lt;/toast&gt;</value>
   </data>
   <data name="Shell_Workspaces.Content" xml:space="preserve">
-    <value>Workspaces</value>
+    <value>Робочі області</value>
   </data>
   <data name="CreateNewWorkspace" xml:space="preserve">
-    <value>Create a new workspace</value>
-  </data>
-  <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
-  </data>
-  <data name="InputStringValue" xml:space="preserve">
-    <value>Input string value</value>
+    <value>Створити робочу область</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Create</value>
+    <value>Створити</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Готово</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Скасувати</value>
   </data>
   <data name="CloseButton.Content" xml:space="preserve">
-    <value>Close</value>  
+    <value>Закрити</value>  
+  </data>
+  <data name="InputStringValue" xml:space="preserve">
+    <value>Введіть рядок</value>
   </data>
   <data name="Command_CreateNew.Text" xml:space="preserve">
-    <value>Create new</value>
+    <value>Створити</value>
   </data>
   <data name="Command_Run.Text" xml:space="preserve">
-    <value>Run</value>
+    <value>Запустити</value>
   </data>
   <data name="Commands_Title.Text" xml:space="preserve">
-    <value>All Commands</value>
+    <value>Усі команди</value>
   </data>
   <data name="CommandLineTemplate_ScriptTextBox.Header" xml:space="preserve">
-    <value>Execute the following script</value>
+    <value>Виконати наступний скрипт</value>
   </data>
   <data name="OutputVariableTextBlock.Text" xml:space="preserve">
-    <value>And save result to</value>
+    <value>І зберегти результат у</value>
   </data>
   <data name="CommandLineTemplate_ErrorVariableTextBlock.Text" xml:space="preserve">
-    <value>and errors to</value>
+    <value>та помилки в</value>
   </data>
   <data name="UserInputTemplate_PlaceholderTextBox.Header" xml:space="preserve">
-    <value>Show user input with the following placeholder</value>
+    <value>Показати вікно введення з назвою</value>
   </data>
   <data name="UserInputTemplate_DefaultValueTextBox.Header" xml:space="preserve">
-    <value>Use the following default value</value>
+    <value>Використовувати наступне значення по замовчуванню</value>
   </data>
   <data name="DisplayMessageTemplate_ShowMessageTextBox.Header" xml:space="preserve">
-    <value>Show message with the following text</value>
+    <value>Показати повідомлення з таким текстом</value>
   </data>
   <data name="DisplayMessageTemplate_TitleTextBox.Header" xml:space="preserve">
-    <value>With the following title</value>
-  </data>
-  <data name="NameTextBox.Header" xml:space="preserve">
-    <value>Name:</value>
+    <value>З таким заголовком</value>
   </data>
   <data name="NewCommand" xml:space="preserve">
-    <value>New command</value>
+    <value>Нова команда</value>
+  </data>
+  <data name="NameTextBox.Header" xml:space="preserve">
+    <value>Назва:</value>
   </data>
   <data name="CommandEditor_ActionsTextBlock.Text" xml:space="preserve">
-    <value>Actions:</value>
+    <value>Дії:</value>
   </data>
   <data name="CommandEditor_AddActionButton.Content" xml:space="preserve">
-    <value>Add new action</value>
+    <value>Додати нову дію</value>
   </data>
   <data name="CreateWorkspace_ImportTextBlock.Text" xml:space="preserve">
-    <value>Import workspace configuration</value> 
+    <value>Імпортувати файл робочої області</value>
   </data>
   <data name="MainPage_StarredCommandsTextBlock.Text" xml:space="preserve">
-    <value>Starred commands</value>    
+    <value>Вибрані команди</value>    
   </data>
   <data name="InputNewVariableName">
-    <value>Input new variable name</value>
+    <value>Введіть нову назву змінної</value>
   </data>
 </root>

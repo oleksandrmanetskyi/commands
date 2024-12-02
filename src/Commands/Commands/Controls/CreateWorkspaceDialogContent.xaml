@@ -11,11 +11,11 @@
 
     <Grid>
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch">
-            <TextBox Text="{x:Bind WorkspaceName, Mode=TwoWay}" Header="Name:" Width="300" />
+            <TextBox x:Uid="NameTextBox" Text="{x:Bind WorkspaceName, Mode=TwoWay}" Width="300" />
             <Button Margin="{StaticResource SmallTopMargin}" HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" FontSize="14" />
-                    <TextBlock Text="Import workspace configuration" Margin="{StaticResource SmallLeftMargin}" />
+                    <TextBlock x:Uid="CreateWorkspace_ImportTextBlock" Margin="{StaticResource SmallLeftMargin}" />
                 </StackPanel>
             </Button>
         </StackPanel>

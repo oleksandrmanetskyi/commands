@@ -133,15 +133,19 @@ public sealed partial class ShellPage : Page
             {
                 XamlRoot = XamlRoot,
                 Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-                Title = "Create a new workspace",
-                PrimaryButtonText = "Create",
-                CloseButtonText = "Cancel",
+                Title = "CreateNewWorkspace".GetLocalized(),
+                PrimaryButtonText = "Create".GetLocalized(),
+                CloseButtonText = "Cancel".GetLocalized(),
                 DefaultButton = ContentDialogButton.Primary,
                 Content = new CreateWorkspaceDialogContent()
             };
 
-            await dialog.ShowAsync();
+            var result = await dialog.ShowAsync();
 
+            if (result != ContentDialogResult.Primary)
+            {
+                return;
+            }
             var name = ((CreateWorkspaceDialogContent)dialog.Content).WorkspaceName;
             workspaceId = workspacesDataService.CreateNewWorkspace(name);
             var newWorkspaceItem = AddNewWorkspaceMenuItem(name, workspaceId, NavigationViewControl.MenuItems.Count - 1);

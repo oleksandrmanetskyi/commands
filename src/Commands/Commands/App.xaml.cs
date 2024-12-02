@@ -12,6 +12,7 @@ using Commands.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.UI.Xaml;
+using Windows.Globalization;
 
 namespace Commands;
 
@@ -92,6 +93,8 @@ public partial class App : Application
         GetService<UiActionPluginsInitializer>().Initialize();
 
         UnhandledException += App_UnhandledException;
+
+        ApplicationLanguages.PrimaryLanguageOverride = "en-US";
     }
 
     private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)

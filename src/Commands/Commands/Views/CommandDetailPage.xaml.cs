@@ -1,5 +1,6 @@
 ﻿using Commands.Behaviors;
 using Commands.Core.ActionPlugins;
+using Commands.Helpers;
 using Commands.ViewModels;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
@@ -33,7 +34,7 @@ public sealed partial class CommandsDetailPage : Page
         }
     }
 
-    private void TextBlock_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+    private async void TextBlock_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
     {
         if (sender is TextBlock textBlock)
         {
@@ -48,16 +49,20 @@ public sealed partial class CommandsDetailPage : Page
             {
                 XamlRoot = App.MainWindow.Content.XamlRoot,
                 Content = inputTextBox,
-                Title = "Input new variable name",
+                Title = "InputNewVariableName".GetLocalized(),
                 IsSecondaryButtonEnabled = true,
-                PrimaryButtonText = "Ok",
-                SecondaryButtonText = "Cancel"
+                PrimaryButtonText = "Ok".GetLocalized(),
+                SecondaryButtonText = "Cancel".GetLocalized()
             };
 
-            if (dialog.ShowAsync().GetResults() == ContentDialogResult.Primary)
+            var dialogResult = await dialog.ShowAsync();
+
+            if (dialogResult == ContentDialogResult.Primary)
             {
-                textBlock.Text = inputTextBox.Text;
+                ViewModel.RenameVariable(name, inputTextBox.Text);
             }
+
+            textBlock.UpdateLayout();
         }
         
     }

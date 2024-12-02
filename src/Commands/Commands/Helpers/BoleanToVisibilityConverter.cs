@@ -7,15 +7,25 @@ public class BooleanToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {
-        if (value is bool boolValue)
+        bool boolValue;
+        if (value is bool v)
         {
-            if (parameter is string stringParam && stringParam.Equals("invert"))
-            {
-                boolValue = !boolValue;
-            }
-            return boolValue ? Visibility.Visible : Visibility.Collapsed;
+            boolValue = v;
         }
-        return Visibility.Collapsed;
+        else if (value is int intValue)
+        {
+            boolValue = intValue > 0;
+        }
+        else
+        {
+            return Visibility.Collapsed;
+        }
+
+        if (parameter is string stringParam && stringParam.Equals("invert"))
+        {
+            boolValue = !boolValue;
+        }
+        return boolValue ? Visibility.Visible : Visibility.Collapsed;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, string language)

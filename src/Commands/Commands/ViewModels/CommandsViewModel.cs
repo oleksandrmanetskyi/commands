@@ -6,6 +6,7 @@ using Commands.Contracts.ViewModels;
 using Commands.Core.Contracts.Services;
 using Commands.Core.Models;
 using Commands.Core.Services;
+using Commands.Helpers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -59,7 +60,7 @@ public class CommandsViewModel : ObservableRecipient, INavigationAware
     {
         var newCommand = new Command 
         {
-            Name = "New command"
+            Name = "NewCommand".GetLocalized()
         };
         workspacesDataService.AddCommandToWorkspace(workspaceId, newCommand);
         NavigateToCommand(newCommand);

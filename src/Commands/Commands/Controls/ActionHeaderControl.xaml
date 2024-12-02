@@ -11,6 +11,8 @@
         CornerRadius="{ThemeResource ControlCornerRadius}"
         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
         Padding="{ThemeResource ListBoxItemPadding}"
+        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+        BorderThickness="1"
         Margin="{ThemeResource SmallTopMargin}">
         <Grid>
             <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">

@@ -18,20 +18,20 @@
                 <controls:ActionHeaderControl.ContentInside>
                     <StackPanel>
                         <TextBox
+                            x:Uid="CommandLineTemplate_ScriptTextBox"
                             Margin="{StaticResource SmallTopMargin}"
-                            Header="Execute the following script"
                             IsSpellCheckEnabled="False"
                             AcceptsReturn="True"
                             ScrollViewer.HorizontalScrollMode="Auto"
                             Text="{x:Bind Parameters['Script'], Mode=TwoWay}" />
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="{StaticResource SmallTopMargin}">
-                            <TextBlock Text="And save output to" VerticalAlignment="Center" />
+                            <TextBlock x:Uid="OutputVariableTextBlock" VerticalAlignment="Center" />
                             <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
-                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
+                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneWay}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
                             </Border>
-                            <TextBlock Text="and error to" VerticalAlignment="Center" Margin="{StaticResource XSmallLeftMargin}"/>
+                            <TextBlock x:Uid="CommandLineTemplate_ErrorVariableTextBlock" VerticalAlignment="Center" Margin="{StaticResource XSmallLeftMargin}"/>
                             <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
-                                <TextBlock Text="{x:Bind VariableNames[1], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
+                                <TextBlock Text="{x:Bind VariableNames[1], Mode=OneWay}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
                             </Border>
                         </StackPanel>
                         
@@ -45,17 +45,17 @@
                 <controls:ActionHeaderControl.ContentInside>
                     <StackPanel>
                         <TextBox 
+                            x:Uid="UserInputTemplate_PlaceholderTextBox"
                             Margin="{StaticResource SmallTopMargin}"
-                            Header="Show user input with the following placeholder"
                             Text="{x:Bind Parameters['Placeholder'], Mode=TwoWay}"/>
                         <TextBox 
+                            x:Uid="UserInputTemplate_DefaultValueTextBox"
                             Margin="{StaticResource SmallTopMargin}"
-                            Header="Use the following default value"
                             Text="{x:Bind Parameters['DefaultValue'], Mode=TwoWay}"/>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="{StaticResource SmallTopMargin}">
-                            <TextBlock Text="And save input to" VerticalAlignment="Center" />
+                            <TextBlock x:Uid="OutputVariableTextBlock" VerticalAlignment="Center" />
                             <Border CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
-                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneTime}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                                <TextBlock Text="{x:Bind VariableNames[0], Mode=OneWay}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
                             </Border>
                         </StackPanel>
                     </StackPanel>
@@ -68,12 +68,12 @@
                 <controls:ActionHeaderControl.ContentInside>
                     <StackPanel>
                         <TextBox 
+                            x:Uid="DisplayMessageTemplate_ShowMessageTextBox"
                             Margin="{StaticResource SmallTopMargin}"
-                            Header="Show message with the following text"
                             Text="{x:Bind Parameters['Message'], Mode=TwoWay}"/>
                         <TextBox 
+                            x:Uid="DisplayMessageTemplate_TitleTextBox"
                             Margin="{StaticResource SmallTopMargin}"
-                            Header="With the following title"
                             Text="{x:Bind Parameters['Title'], Mode=TwoWay}"/>
                     </StackPanel>
                 </controls:ActionHeaderControl.ContentInside>
@@ -90,72 +90,75 @@
 
     <Grid>
         <Grid 
-            RowDefinitions="*, Auto" 
+            ColumnDefinitions="*, 300"
+            ColumnSpacing="16"
             Visibility="{x:Bind ViewModel.CommandOutputViewOpened, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=invert}">
-            <Grid Grid.Row="0">
+            <Grid Grid.Column="0">
                 <ScrollViewer>
                     <StackPanel HorizontalAlignment="Stretch">
                         <TextBox
-                            Header="Name:"
+                            x:Uid="NameTextBox"
                             Text="{x:Bind ViewModel.Command.Name, Mode=TwoWay}"
                             HorizontalAlignment="Left"
                             Width="300" />
-                        <TextBlock Margin="{ThemeResource MediumTopMargin}" Text="Actions:" />
+                        <TextBlock Margin="{ThemeResource MediumTopMargin}" x:Uid="CommandEditor_ActionsTextBlock" />
                         <ItemsRepeater 
                             ItemsSource="{x:Bind ViewModel.Command.Actions, Mode=OneWay}" 
                             ItemTemplate="{StaticResource ActionDataTemplateSelector}"
                             HorizontalAlignment="Left">
                         </ItemsRepeater>
-                        <DropDownButton Content="Add new action" Margin="{StaticResource SmallTopMargin}">
-                            <DropDownButton.Flyout>
-                                <Flyout Placement="Bottom">
-                                    <ListView
-                                        x:Name="AvaliableActionsListView"
-                                        ItemsSource="{x:Bind ViewModel.GetActionPlugins()}" 
-                                        Height="130"
-                                        ItemClick="AvaliableActionsListView_ItemClick"
-                                        SelectionMode="None"
-                                        IsItemClickEnabled="True">
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate x:DataType="actionPlugins:IActionPlugin">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <ImageIcon 
-                                                        Width="16"
-                                                        Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(Name)}" />
-                                                    <TextBlock 
-                                                        Text="{x:Bind Name}" Margin="{StaticResource XSmallLeftMargin}" />
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </Flyout>
-                            </DropDownButton.Flyout>
-                        </DropDownButton>
+                        
                     </StackPanel>
                 </ScrollViewer>
             </Grid>
-
-            <!-- <StackPanel Grid.Row="1" Padding="{StaticResource FooterPadding}" Orientation="Horizontal">
-                <Button Content="Move to another workspace" />
-                <Button Margin="{StaticResource SmallLeftMargin}" Background="Firebrick" Foreground="White">
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;" FontSize="14"/>
-                        <TextBlock Text="Delete" Margin="{StaticResource XSmallLeftMargin}" />
-                    </StackPanel>
-
-                    <Button.Flyout>
-                        <Flyout>
-                            <StackPanel>
-                                <TextBlock 
-                                    Style="{ThemeResource BaseTextBlockStyle}" 
-                                    Text="The command will be removed. Do you want to continue?" />
-                                <Button Content="Yes, delete" Margin="{StaticResource SmallTopMargin}"/>
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-
-                </Button>
-            </StackPanel> -->
+            <StackPanel Grid.Column="1" Orientation="Vertical">
+                <StackPanel
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    Padding="{ThemeResource ListBoxItemPadding}">
+                    <ListView
+                        x:Name="AvaliableActionsListView"
+                        ItemsSource="{x:Bind ViewModel.GetActionPlugins()}" 
+                        ItemClick="AvaliableActionsListView_ItemClick"
+                        SelectionMode="None"
+                        IsItemClickEnabled="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="actionPlugins:IActionPlugin">
+                                <StackPanel Orientation="Horizontal">
+                                    <ImageIcon 
+                                        Width="16"
+                                        Source="{x:Bind helpers:ActionIconResolverHelper.GetIconByName(Name)}" />
+                                    <TextBlock 
+                                        Text="{x:Bind Name}" Margin="{StaticResource XSmallLeftMargin}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+                <StackPanel
+                    Margin="{StaticResource SmallTopMargin}"
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    Padding="{ThemeResource ListBoxItemPadding}">
+                    <TextBlock Text="Немає створених змінних" Visibility="{x:Bind ViewModel.EmptyVariables, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    <ListView
+                        ItemsSource="{x:Bind ViewModel.variables}" 
+                        SelectionMode="None"
+                        IsItemClickEnabled="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Border HorizontalAlignment="Left" CornerRadius="10" Padding="5, 0, 5, 2" Margin="{StaticResource XSmallLeftMargin}" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                    <TextBlock Text="{x:Bind ToString(), Mode=OneWay}" Padding="0" Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Tapped="TextBlock_Tapped" />
+                                </Border>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </StackPanel>
         </Grid>
         <Grid 
             x:Name="OutputWindow" 
@@ -174,7 +177,7 @@
                     Text="{x:Bind ViewModel.CommandOutput, Mode=OneWay}"
                     TextWrapping="Wrap"
                     IsReadOnly="True"/>
-                <Button Grid.Row="2" Margin="{StaticResource SmallTopMargin}" Content="Close" Command="{x:Bind ViewModel.CloseOutputCommandButtonClickCommand}" />
+                <Button x:Uid="CloseButton" Grid.Row="2" Margin="{StaticResource SmallTopMargin}" Command="{x:Bind ViewModel.CloseOutputCommandButtonClickCommand}" />
             </StackPanel>
         </Grid>
     </Grid>

@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea">
-        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Starred commands" />
+        <TextBlock x:Uid="MainPage_StarredCommandsTextBlock" Style="{StaticResource SubtitleTextBlockStyle}" />
         
         <GridView
             ItemsSource="{x:Bind ViewModel.StarredCommands}"

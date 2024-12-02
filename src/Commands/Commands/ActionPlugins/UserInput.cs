@@ -1,5 +1,6 @@
 ﻿using Commands.Core.ActionPlugins;
 using Commands.Core.Models;
+using Commands.Helpers;
 using Microsoft.UI.Xaml.Controls;
 
 namespace Commands.ActionPlugins;
@@ -30,10 +31,10 @@ public class UserInput : IActionPlugin
         {
             XamlRoot = App.MainWindow.Content.XamlRoot,
             Content = inputTextBox,
-            Title = "Input string value",
+            Title = "InputStringValue".GetLocalized(),
             IsSecondaryButtonEnabled = true,
-            PrimaryButtonText = "Ok",
-            SecondaryButtonText = "Cancel"
+            PrimaryButtonText = "Ok".GetLocalized(),
+            SecondaryButtonText = "Cancel".GetLocalized()
         };
 
         outputDataReceivedHandler($"Show dialog {inputTextBox.PlaceholderText}");

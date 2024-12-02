@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows.Input;
 using Commands.ActionPlugins;
 using Commands.Contracts.ViewModels;
@@ -23,7 +24,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     private readonly ActionsRegistry actionsService;
     private readonly CommandExecutor commandExecutor;
 
-    private readonly List<string> variables;
+    public readonly ObservableCollection<string> variables;
 
     [ObservableProperty]
     private Command? command;
@@ -33,6 +34,8 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     private string? commandOutput;
     [ObservableProperty]
     private bool commandOutputViewOpened;
+    [ObservableProperty]
+    private bool emptyVariables;
 
     public CommandDetailViewModel(
         WorkspacesDataService workspacesDataService, ActionsRegistry actionsService, CommandExecutor commandExecutor)
@@ -41,10 +44,11 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         this.actionsService = actionsService;
         this.commandExecutor = commandExecutor;
 
-        variables = new List<string>();
+        variables = new ObservableCollection<string>();
 
         CommandIsRunning = false;
         CommandOutputViewOpened = false;
+        EmptyVariables = true;
 
         RunButtonClickCommand = new AsyncRelayCommand(ExecuteAsync);
         StarCommandButtonClickCommand = new RelayCommand(StarCommand);
@@ -56,6 +60,14 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         if (parameter is Guid commandId)
         {
             Command = workspacesDataService.GetCommand(commandId);
+
+            foreach (var action in Command!.Actions)
+            {
+                for (var i = 0; i < action.VariableNames.Count; i++)
+                {
+                    action.VariableNames[i] = CreateVariable(action.VariableNames[i]);
+                }
+            }
         }
     }
 
@@ -84,14 +96,18 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         var actionPlugin = actionsService.GetActionPluginByName(actionName) 
             ?? throw new InvalidOperationException($"Action plugin {actionName} not found");
 
-        var variableNames = actionPlugin.GetVariableNames().Select(CreateVariable);
+        var variableNamesCollection = new ObservableCollection<string>();
+        foreach (var variable in actionPlugin.GetVariableNames().Select(CreateVariable))
+        {
+            variableNamesCollection.Add(variable);
+        }
 
         Command?.Actions.Add(new Core.Models.Action()
         {
             PluginName = actionName,
             Parameters = actionPlugin.GetDefaultParameters(),
             Layout = layout,
-            VariableNames = variableNames.ToList()
+            VariableNames = variableNamesCollection
         });
     }
 
@@ -114,10 +130,32 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     public void RenameVariable(string oldVariableName, string newVariableName)
     {
-        if (variables.Contains(oldVariableName))
+        var index = variables.IndexOf(oldVariableName);
+        if (index != -1)
         {
-            variables.Remove(oldVariableName);
-            variables.Add(newVariableName);
+            variables[index] = newVariableName;
+        }
+
+        foreach (var action in Command!.Actions)
+        {
+            for (var i = 0; i < action.VariableNames.Count; i++)
+            {
+                if (action.VariableNames[i] == oldVariableName)
+                {
+                    action.VariableNames[i] = newVariableName;
+                }
+            }
+        }
+
+        foreach (var action in Command!.Actions)
+        {
+            foreach (var parameter in action.Parameters)
+            {
+                if (parameter.Value.Contains(oldVariableName))
+                {
+                    action.Parameters[parameter.Key] = parameter.Value.Replace(oldVariableName, newVariableName);
+                }
+            }
         }
     }
 
@@ -163,6 +201,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         }
 
         variables.Add(result);
+        EmptyVariables = false;
 
         return result;
     }
