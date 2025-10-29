@@ -49,9 +49,9 @@ public class CommandPromptActionPlugin : IActionPlugin
 
         await Task.WhenAll(outputTask, errorTask);
 
-        // Tasks are already completed, safe to access Result
-        var output = outputTask.Result;
-        var error = errorTask.Result;
+        // Tasks are already completed, use GetAwaiter().GetResult() for better exception handling
+        var output = outputTask.GetAwaiter().GetResult();
+        var error = errorTask.GetAwaiter().GetResult();
 
         await process.WaitForExitAsync();
 
