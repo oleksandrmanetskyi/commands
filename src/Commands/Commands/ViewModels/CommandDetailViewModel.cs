@@ -90,15 +90,13 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     public void CreateNewAction(string actionName)
     {
-        // TODO: Mode to action plugin definition
-        var layout = actionName == new UserInput().Name 
-            ? Layouts.UserInput 
-            : actionName == new DisplayMessage().Name 
-            ? Layouts.DisplayMessage 
-            : Layouts.CommandLine;
-
         var actionPlugin = actionsService.GetActionPluginByName(actionName) 
             ?? throw new InvalidOperationException($"Action plugin {actionName} not found");
+
+        // Determine layout based on action type instead of creating new instances
+        var layout = actionPlugin.Type == ActionType.UI
+            ? (actionName == "User Input" ? Layouts.UserInput : Layouts.DisplayMessage)
+            : Layouts.CommandLine;
 
         var variableNamesCollection = new ObservableCollection<string>();
         foreach (var variable in actionPlugin.GetVariableNames().Select(CreateVariable))

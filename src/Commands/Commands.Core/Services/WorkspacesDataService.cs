@@ -23,12 +23,13 @@ public class WorkspacesDataService
 
     public Guid CreateNewWorkspace(string name)
     {
-        allWorkspaces.Add(new()
+        var workspace = new Workspace
         {
             Name = name
-        });
+        };
+        allWorkspaces.Add(workspace);
 
-        return allWorkspaces.Last().Id;
+        return workspace.Id;
     }
 
     public IEnumerable<Command> GetWorkspaceCommands(Guid workspaceId)

@@ -42,25 +42,7 @@ public class PowerShellActionPlugin : IActionPlugin
             CreateNoWindow = true
         };
 
-        using var process = new Process
-        {
-            StartInfo = start,
-            EnableRaisingEvents = true
-        };
-
-        process.OutputDataReceived += (sender, args) =>
-        {
-            outputDataReceivedHandler(args.Data);
-        };
-        process.ErrorDataReceived += (sender, args) =>
-        {
-            if (args.Data != null)
-            {
-                outputDataReceivedHandler(args.Data);
-            }
-        };
-
-        process.Start();
+        using var process = Process.Start(start);
 
         var output = await process.StandardOutput.ReadToEndAsync();
         outputDataReceivedHandler(output);
