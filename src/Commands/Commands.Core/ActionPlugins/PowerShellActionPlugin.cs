@@ -44,9 +44,16 @@ public class PowerShellActionPlugin : IActionPlugin
 
         using var process = Process.Start(start);
 
-        var output = await process.StandardOutput.ReadToEndAsync();
+        // Read both streams concurrently to avoid potential deadlock
+        var outputTask = process.StandardOutput.ReadToEndAsync();
+        var errorTask = process.StandardError.ReadToEndAsync();
+
+        await Task.WhenAll(outputTask, errorTask);
+
+        var output = await outputTask;
+        var error = await errorTask;
+
         outputDataReceivedHandler(output);
-        var error = await process.StandardError.ReadToEndAsync();
 
         await process.WaitForExitAsync();
 

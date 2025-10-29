@@ -93,9 +93,9 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         var actionPlugin = actionsService.GetActionPluginByName(actionName) 
             ?? throw new InvalidOperationException($"Action plugin {actionName} not found");
 
-        // Determine layout based on action type instead of creating new instances
+        // Determine layout based on action type and name
         var layout = actionPlugin.Type == ActionType.UI
-            ? (actionName == "User Input" ? Layouts.UserInput : Layouts.DisplayMessage)
+            ? (actionPlugin.Name == "User Input" ? Layouts.UserInput : Layouts.DisplayMessage)
             : Layouts.CommandLine;
 
         var variableNamesCollection = new ObservableCollection<string>();
