@@ -5,6 +5,7 @@ namespace Commands.Core.Services;
 public class ActionsRegistry
 {
     public readonly List<IActionPlugin> plugins = new();
+    private readonly Dictionary<string, IActionPlugin> pluginsByName = new();
 
     public ActionsRegistry()
     {
@@ -18,6 +19,7 @@ public class ActionsRegistry
         if (plugin.IsAvailable())
         {
             plugins.Add(plugin);
+            pluginsByName[plugin.Name] = plugin;
         }
     }
 
@@ -28,6 +30,7 @@ public class ActionsRegistry
 
     public IActionPlugin GetActionPluginByName(string name)
     {
-        return plugins.First(p => p.Name == name);
+        // Use dictionary lookup for O(1) performance instead of linear search
+        return pluginsByName.TryGetValue(name, out var plugin) ? plugin : null;
     }
 }

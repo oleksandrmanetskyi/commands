@@ -41,7 +41,8 @@ public class CommandsViewModel : ObservableRecipient, INavigationAware
             Source.Add(item);
         }
 
-        workspacesDataService.SaveWorkspacesToApplicationData().Wait();
+        // Fire and forget - don't block UI thread
+        _ = workspacesDataService.SaveWorkspacesToApplicationData();
     }
 
     public void OnNavigatedFrom()
