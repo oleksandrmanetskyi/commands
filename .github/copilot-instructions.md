@@ -35,9 +35,9 @@ Key directories:
 
 ### 2. Commands.Core (Core Library)
 - **Location**: `src/Commands/Commands.Core/`
-- **Type**: .NET Standard Library
+- **Type**: .NET 7 Class Library
 - **Purpose**: Core business logic, models, and reusable code
-- **Target Framework**: net7.0 (platform-agnostic)
+- **Target Framework**: net7.0
 
 Key components:
 - `Models/` - Domain models (Command, Action, Workspace, CommandExecutorContext, VariableInfo)
@@ -191,7 +191,7 @@ dotnet test Commands.Tests.MSTest/Commands.Tests.MSTest.csproj
 ## Important Notes
 
 - **Platform-specific**: This is a Windows-only application (WinUI 3)
-- **Multi-targeting**: Main app targets Windows 10 version 19041 minimum
+- **Multi-targeting**: Main app targets Windows 10.0.19041.0, with minimum version 10.0.17763.0
 - **Packaging**: Uses MSIX packaging for deployment
 - **File paths**: Use absolute paths when working with file services
 - **Async/await**: Most service operations are async, always use async/await pattern
