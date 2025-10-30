@@ -6,12 +6,6 @@ namespace Commands.Tests.MSTest.Helpers;
 [TestClass]
 public class JsonHelperTests
 {
-    private class TestObject
-    {
-        public string Name { get; set; } = string.Empty;
-        public int Value { get; set; }
-    }
-
     [TestMethod]
     public async Task ToObjectAsync_DeserializesJsonCorrectly()
     {
