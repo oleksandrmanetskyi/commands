@@ -4,19 +4,15 @@ namespace Commands.Core.Helpers;
 
 public static class Json
 {
-    public static async Task<T> ToObjectAsync<T>(string value)
+    public static Task<T> ToObjectAsync<T>(string value)
     {
-        return await Task.Run(() =>
-        {
-            return JsonConvert.DeserializeObject<T>(value);
-        });
+        // Synchronous JSON deserialization is fast enough; no need to offload to thread pool
+        return Task.FromResult(JsonConvert.DeserializeObject<T>(value));
     }
 
-    public static async Task<string> StringifyAsync(object value)
+    public static Task<string> StringifyAsync(object value)
     {
-        return await Task.Run(() =>
-        {
-            return JsonConvert.SerializeObject(value);
-        });
+        // Synchronous JSON serialization is fast enough; no need to offload to thread pool
+        return Task.FromResult(JsonConvert.SerializeObject(value));
     }
 }

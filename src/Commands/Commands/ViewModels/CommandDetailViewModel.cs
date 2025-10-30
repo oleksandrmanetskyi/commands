@@ -25,6 +25,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     private readonly CommandExecutor commandExecutor;
 
     public readonly ObservableCollection<string> variables;
+    private readonly StringBuilder commandOutputBuilder;
 
     [ObservableProperty]
     private Command? command;
@@ -45,6 +46,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
         this.commandExecutor = commandExecutor;
 
         variables = new ObservableCollection<string>();
+        commandOutputBuilder = new StringBuilder();
 
         CommandIsRunning = false;
         CommandOutputViewOpened = false;
@@ -81,20 +83,20 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
 
     public void OnOutputDataReceived(string output)
     {
-        CommandOutput += output + '\n';
+        // Use StringBuilder for efficient string concatenation
+        commandOutputBuilder.AppendLine(output);
+        CommandOutput = commandOutputBuilder.ToString();
     }
 
     public void CreateNewAction(string actionName)
     {
-        // TODO: Mode to action plugin definition
-        var layout = actionName == new UserInput().Name 
-            ? Layouts.UserInput 
-            : actionName == new DisplayMessage().Name 
-            ? Layouts.DisplayMessage 
-            : Layouts.CommandLine;
-
         var actionPlugin = actionsService.GetActionPluginByName(actionName) 
             ?? throw new InvalidOperationException($"Action plugin {actionName} not found");
+
+        // Determine layout based on action type and name
+        var layout = actionPlugin.Type == ActionType.UI
+            ? (actionPlugin.Name == "User Input" ? Layouts.UserInput : Layouts.DisplayMessage)
+            : Layouts.CommandLine;
 
         var variableNamesCollection = new ObservableCollection<string>();
         foreach (var variable in actionPlugin.GetVariableNames().Select(CreateVariable))
@@ -136,8 +138,10 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
             variables[index] = newVariableName;
         }
 
+        // Single pass through all actions to update both VariableNames and Parameters
         foreach (var action in Command!.Actions)
         {
+            // Update variable names
             for (var i = 0; i < action.VariableNames.Count; i++)
             {
                 if (action.VariableNames[i] == oldVariableName)
@@ -145,10 +149,8 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
                     action.VariableNames[i] = newVariableName;
                 }
             }
-        }
 
-        foreach (var action in Command!.Actions)
-        {
+            // Update parameters in the same iteration
             foreach (var parameter in action.Parameters)
             {
                 if (parameter.Value.Contains(oldVariableName))
@@ -183,6 +185,7 @@ public partial class CommandDetailViewModel : ObservableRecipient, INavigationAw
     private void CloseOutput()
     {
         CommandOutputViewOpened = false;
+        commandOutputBuilder.Clear();
         CommandOutput = string.Empty;
         // todo cancel
     }

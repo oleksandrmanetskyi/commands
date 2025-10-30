@@ -42,29 +42,19 @@ public class PowerShellActionPlugin : IActionPlugin
             CreateNoWindow = true
         };
 
-        using var process = new Process
-        {
-            StartInfo = start,
-            EnableRaisingEvents = true
-        };
+        using var process = Process.Start(start);
 
-        process.OutputDataReceived += (sender, args) =>
-        {
-            outputDataReceivedHandler(args.Data);
-        };
-        process.ErrorDataReceived += (sender, args) =>
-        {
-            if (args.Data != null)
-            {
-                outputDataReceivedHandler(args.Data);
-            }
-        };
+        // Read both streams concurrently to avoid potential deadlock
+        var outputTask = process.StandardOutput.ReadToEndAsync();
+        var errorTask = process.StandardError.ReadToEndAsync();
 
-        process.Start();
+        await Task.WhenAll(outputTask, errorTask);
 
-        var output = await process.StandardOutput.ReadToEndAsync();
+        // Tasks are already completed, use GetAwaiter().GetResult() for better exception handling
+        var output = outputTask.GetAwaiter().GetResult();
+        var error = errorTask.GetAwaiter().GetResult();
+
         outputDataReceivedHandler(output);
-        var error = await process.StandardError.ReadToEndAsync();
 
         await process.WaitForExitAsync();
 

@@ -33,9 +33,13 @@ public class FileService : IFileService
 
     public void Delete(string folderPath, string fileName)
     {
-        if (fileName != null && File.Exists(Path.Combine(folderPath, fileName)))
+        if (fileName != null)
         {
-            File.Delete(Path.Combine(folderPath, fileName));
+            var filePath = Path.Combine(folderPath, fileName);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
         }
     }
 }

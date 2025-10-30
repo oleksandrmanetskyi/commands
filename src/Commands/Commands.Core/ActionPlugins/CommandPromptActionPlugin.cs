@@ -43,8 +43,15 @@ public class CommandPromptActionPlugin : IActionPlugin
 
         using var process = Process.Start(start);
 
-        var output = await process.StandardOutput.ReadToEndAsync();
-        var error = await process.StandardError.ReadToEndAsync();
+        // Read both streams concurrently to avoid potential deadlock
+        var outputTask = process.StandardOutput.ReadToEndAsync();
+        var errorTask = process.StandardError.ReadToEndAsync();
+
+        await Task.WhenAll(outputTask, errorTask);
+
+        // Tasks are already completed, use GetAwaiter().GetResult() for better exception handling
+        var output = outputTask.GetAwaiter().GetResult();
+        var error = errorTask.GetAwaiter().GetResult();
 
         await process.WaitForExitAsync();
 

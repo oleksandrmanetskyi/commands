@@ -12,7 +12,8 @@ public class WorkspacesDataService
     public WorkspacesDataService(ILocalStorageService localStorageService) 
     {
         this.localStorageService = localStorageService;
-        Task.Run(Load).Wait();
+        // Use GetAwaiter().GetResult() instead of Task.Run().Wait() to avoid thread pool issues
+        Load().GetAwaiter().GetResult();
     }
 
     public IEnumerable<Workspace> GetWorkpaces()
@@ -22,12 +23,13 @@ public class WorkspacesDataService
 
     public Guid CreateNewWorkspace(string name)
     {
-        allWorkspaces.Add(new()
+        var workspace = new Workspace
         {
             Name = name
-        });
+        };
+        allWorkspaces.Add(workspace);
 
-        return allWorkspaces.Last().Id;
+        return workspace.Id;
     }
 
     public IEnumerable<Command> GetWorkspaceCommands(Guid workspaceId)
@@ -51,9 +53,10 @@ public class WorkspacesDataService
     {
         foreach (var workspace in allWorkspaces)
         {
-            var command = GetCommandFromWorkspace(workspace, commandId);
+            var command = workspace.Commands.FirstOrDefault(x => x.Id == commandId);
             if (command != null)
             {
+                workspace.Commands.Remove(command);
                 return;
             }
         }
@@ -63,7 +66,7 @@ public class WorkspacesDataService
     {
         foreach (var workspace in allWorkspaces)
         {
-            var command = GetCommandFromWorkspace(workspace, commandId);
+            var command = workspace.Commands.FirstOrDefault(x => x.Id == commandId);
             if (command != null)
             {
                 return command;
@@ -71,11 +74,6 @@ public class WorkspacesDataService
         }
 
         return null;
-    }
-
-    private static Command GetCommandFromWorkspace(Workspace workspace, Guid commandId)
-    {
-        return workspace.Commands.FirstOrDefault(x => x.Id == commandId);
     }
 
     private async Task Load()
